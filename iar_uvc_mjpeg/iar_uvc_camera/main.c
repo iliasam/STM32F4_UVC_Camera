@@ -19,7 +19,7 @@ uint8_t *line_proc_pointer = (uint8_t*)&frame_buffer;
 //JPEG and USB transmission
 uint16_t last_jpeg_frame_size = 0;
 volatile uint8_t jpeg_encode_done = 0;//1 - encode stopped //кодирование закончилось
-volatile uint8_t new_frame_cap_enabled = 1;//1 - capture and enсoding enabled
+volatile uint8_t new_frame_cap_enabled = 1;//1 - capture and encoding enabled
 
 //CAPTURE
 extern volatile uint8_t capture_enabled;
