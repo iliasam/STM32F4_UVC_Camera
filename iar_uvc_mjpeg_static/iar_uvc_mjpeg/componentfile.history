@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<History> 
+  <File usedCount="2" path="drivers/stm32_usb_device_library/class/audio/inc/usbd_audio_core.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/class/audio/inc/usbd_audio_out_if.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/class/audio/src/usbd_audio_core.c"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/class/audio/src/usbd_audio_out_if.c"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/core/inc/usbd_conf_template.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/core/inc/usbd_core.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/core/inc/usbd_def.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/core/inc/usbd_ioreq.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/core/inc/usbd_req.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/core/inc/usbd_usr.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/core/src/usbd_core.c"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/core/src/usbd_ioreq.c"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/core/src/usbd_req.c"/>  
+  <File usedCount="2" path="drivers/stm32_usb_device_library/release_notes.html"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/inc/usb_bsp.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/inc/usb_conf_template.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/inc/usb_core.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/inc/usb_dcd.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/inc/usb_dcd_int.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/inc/usb_defines.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/inc/usb_hcd.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/inc/usb_hcd_int.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/inc/usb_otg.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/inc/usb_regs.h"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/release_notes.html"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/src/usb_core.c"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/src/usb_dcd.c"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/src/usb_dcd_int.c"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/src/usb_hcd.c"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/src/usb_hcd_int.c"/>  
+  <File usedCount="2" path="drivers/stm32_usb_otg_driver/src/usb_otg.c"/>
+</History>

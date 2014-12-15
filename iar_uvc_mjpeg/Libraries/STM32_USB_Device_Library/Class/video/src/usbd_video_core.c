@@ -1,5 +1,4 @@
 #include "usbd_video_core.h"
-#include "usbd_video_if.h"
 #include "uvc.h"
 #include "jprocess.h"
 

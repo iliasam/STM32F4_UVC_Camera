@@ -1,9 +1,11 @@
 #include "usbd_video_core.h"
 #include "uvc.h"
-#include "test_pic1.h"
+#include "jprocess.h"
 
-
-
+extern uint8_t *read_pointer;
+extern uint16_t last_jpeg_frame_size;
+extern volatile uint8_t jpeg_encode_done;//1 - encode stopped  //кодирование закончилось
+extern volatile uint8_t jpeg_encode_enabled;
 
 /*********************************************
    VIDEO Device library callbacks
@@ -24,7 +26,7 @@ static uint8_t  usbd_video_IN_Incplt (void  *pdev);
 static void VIDEO_Req_GetCurrent(void *pdev, USB_SETUP_REQ *req);
 static void VIDEO_Req_SetCurrent(void *pdev, USB_SETUP_REQ *req);
 static uint8_t  *USBD_video_GetCfgDesc (uint8_t speed, uint16_t *length);
-static void VIDEO_Req_GetRes(void *pdev, USB_SETUP_REQ *req);
+void VIDEO_Req_GetRes(void *pdev, USB_SETUP_REQ *req);
 
 
 static uint32_t  usbd_video_AltSet = 0;//number of current interface alternative setting
@@ -34,9 +36,7 @@ uint8_t  VideoCtlCmd = 0;
 uint32_t VideoCtlLen = 0;
 uint8_t  VideoCtlUnit = 0;
 
-uint8_t play_status = 0;//0 - stream stopped, 1 - ready to stream, 2 - stream running
-
-extern uint8_t new_frame_trigger;//timer set it to 1 every 100ms
+uint8_t play_status = 0;
 
 //data array for Video Probe and Commit
 VideoControl    videoCommitControl =
@@ -97,7 +97,6 @@ USBD_Class_cb_TypeDef  VIDEO_cb =
   USBD_video_GetCfgDesc, /* use same config as per FS */
 #endif    
 };
-
 
 /* USB VIDEO device Configuration Descriptor */
 static uint8_t usbd_video_CfgDesc[] =
@@ -210,16 +209,10 @@ static uint8_t usbd_video_CfgDesc[] =
   /* Class-specific VS Format Descriptor  */
   VS_FORMAT_UNCOMPRESSED_DESC_SIZE,     /* bLength 27*/
   CS_INTERFACE,                         /* bDescriptorType : CS_INTERFACE */
-  VS_FORMAT_UNCOMPRESSED,               /* bDescriptorSubType : VS_FORMAT_UNCOMPRESSED subtype */
+  VS_FORMAT_MJPEG,                      /* bDescriptorSubType : VS_FORMAT_MJPEG subtype */
   0x01,                                 /* bFormatIndex : First (and only) format descriptor */
   0x01,                                 /* bNumFrameDescriptors : One frame descriptor for this format follows. */
-  //0x59,0x55,0x59,0x32,                  /* Giud Format YUY2 {32595559-0000-0010-8000-00AA00389B71} */
-  0x4E,0x56,0x31,0x32,                  /* NV12:           3231564E-0000-0010-8000-00AA00389B71 */
-  0x00,0x00,
-  0x10,0x00,
-  0x80,0x00,0x00,0xAA,0x00,0x38,0x9B,0x71,
-  //16,                                 // bBitsPerPixel : Number of bits per pixel used to specify color in the decoded video frame - 16 for yuy2
-  12,									//12 for nv12
+  0x01,                                 /* bmFlags : Uses fixed size samples.. */
   0x01,                                 /* bDefaultFrameIndex : Default frame index is 1. */
   0x00,                                 /* bAspectRatioX : Non-interlaced stream not required. */
   0x00,                                 /* bAspectRatioY : Non-interlaced stream not required. */
@@ -238,8 +231,10 @@ static uint8_t usbd_video_CfgDesc[] =
   DBVAL(MAX_BIT_RATE),                  /* dwMaxBitRate (4bytes): Max bit rate in bits/s  */ // 128*64*16*5 = 655360 = 0x000A0000
   DBVAL(MAX_FRAME_SIZE),                /* dwMaxVideoFrameBufSize (4bytes): Maximum video or still frame size, in bytes. */ // 128*64*2 = 16384 = 0x00004000
   DBVAL(INTERVAL),				        /* dwDefaultFrameInterval : 1,000,000 * 100ns -> 10 FPS */ // 5 FPS -> 200ms -> 200,000 us -> 2,000,000 X 100ns = 0x001e8480
-  0x01,                                 /* bFrameIntervalType : Continuous frame interval */
+  0x00,                                 /* bFrameIntervalType : Continuous frame interval */
   DBVAL(INTERVAL),                      /* dwMinFrameInterval : 1,000,000 ns  *100ns -> 10 FPS */
+  DBVAL(INTERVAL),                      /* dwMaxFrameInterval : 1,000,000 ns  *100ns -> 10 FPS */
+  0x00, 0x00, 0x00, 0x00,               /* dwFrameIntervalStep : No frame interval step supported. */
   
   /* Color Matching Descriptor */
   VS_COLOR_MATCHING_DESC_SIZE,          /* bLength */
@@ -279,15 +274,14 @@ static uint8_t usbd_video_CfgDesc[] =
 static uint8_t  usbd_video_Init (void  *pdev, 
                                  uint8_t cfgidx)
 {  
- 
-  /* Open EP IN */
+    /* Open EP IN */
   DCD_EP_Open(pdev,
-              USB_ENDPOINT_IN(1),
-              VIDEO_PACKET_SIZE,
-              USB_OTG_EP_ISOC);
-  
+		      USB_ENDPOINT_IN(1),
+		      VIDEO_PACKET_SIZE,
+                      USB_OTG_EP_ISOC);
+
   /* Initialize the Video Hardware layer */
-  
+   
   return USBD_OK;
 }
 
@@ -396,15 +390,35 @@ static uint8_t  usbd_video_DataIn (void *pdev, uint8_t epnum)
   uint16_t i;
   static uint32_t picture_pos;
   
+  static uint16_t packets_in_frame = 1;
+  static uint16_t last_packet_size = 0;
+  
+  static uint8_t tx_enable_flag = 0;//разрешение передачи
+  
   DCD_EP_Flush(pdev,USB_ENDPOINT_IN(1));//very important
   
-  packets_cnt++;
-  if (packets_cnt>(PACKETS_IN_FRAME-1))
+  
+  
+  if (tx_enable_flag) packets_cnt++;
+  
+  if (tx_enable_flag == 0)//если передача закончилась
   {
-    //start of new frame
-    packets_cnt = 0;
-    header[1]^= 1;//toggle bit0 every new frame
-    picture_pos = 0;
+    if (jpeg_encode_done)//если кодирование закончилось
+    {
+      tx_enable_flag = 1;
+      switch_buffers();//переключить буферы для двойной буферизации
+      jpeg_encode_enabled = 1;//начать новое кодирование
+      
+      //start of new frame
+      packets_cnt = 0;
+      header[1]^= 1;//toggle bit0 every new frame
+      picture_pos = 0;
+      
+      packets_in_frame = (last_jpeg_frame_size/ ((uint16_t)VIDEO_PACKET_SIZE -2))+1;//-2 - без учета заголовка
+      last_packet_size = (last_jpeg_frame_size - ((packets_in_frame-1) * ((uint16_t)VIDEO_PACKET_SIZE-2)) + 2);//+2 - учитывая заголовок
+    }
+    
+    
   }
   
   packet[0] = header[0];
@@ -412,22 +426,36 @@ static uint8_t  usbd_video_DataIn (void *pdev, uint8_t epnum)
   
   for (i=2;i<VIDEO_PACKET_SIZE;i++)
   {
-    if ((packets_cnt< 10) && (STM_EVAL_PBGetState(BUTTON_USER) != 0)) //react to button
-    {
-      packet[i] = 0xAA;
-    }
-    else
-    {
-      packet[i] = nv12_picture[picture_pos];
-    }
+    packet[i] = read_pointer[picture_pos];
     picture_pos++;
   }
   
-  if (play_status == 2) DCD_EP_Tx (pdev,USB_ENDPOINT_IN(1), (uint8_t*)&packet, (uint32_t)VIDEO_PACKET_SIZE);
+  if (play_status == 2)
+  {
+    if (packets_cnt< (packets_in_frame - 1))
+    {
+      DCD_EP_Tx (pdev,USB_ENDPOINT_IN(1), (uint8_t*)&packet, (uint32_t)VIDEO_PACKET_SIZE);
+    }
+    else if (tx_enable_flag == 1)//только если передача разрешена
+    {
+      DCD_EP_Tx (pdev,USB_ENDPOINT_IN(1), (uint8_t*)&packet, (uint32_t)last_packet_size);
+      tx_enable_flag = 0;//больше нельзя передавать данные
+      picture_pos = 0;
+    }
+    else
+    {
+      DCD_EP_Tx (pdev,USB_ENDPOINT_IN(1), (uint8_t*)&header, 2);//header
+      picture_pos = 0;//protection from overflow
+    }
+    
+    
+  }
+  
   else
   {
     packets_cnt = 0xffff;
   }
+  
   
   STM_EVAL_LEDToggle(LED6);
   return USBD_OK;
@@ -446,24 +474,24 @@ static uint8_t  usbd_video_DataOut (void *pdev, uint8_t epnum)
 
 static uint8_t  usbd_video_SOF (void *pdev)
 {     
-  
+
   if (play_status == 1)
   {
-    DCD_EP_Flush(pdev,USB_ENDPOINT_IN(1));
-    DCD_EP_Tx (pdev,USB_ENDPOINT_IN(1), (uint8_t*)0x0002, 2);//header
-    play_status = 2;
+	  DCD_EP_Flush(pdev,USB_ENDPOINT_IN(1));
+	  DCD_EP_Tx (pdev,USB_ENDPOINT_IN(1), (uint8_t*)0x0002, 2);//header
+	  play_status = 2;
   }
   return USBD_OK;
 }
 
 static uint8_t  usbd_video_OUT_Incplt (void  *pdev)
 {
-  return USBD_OK;
+	return USBD_OK;
 }
 
 static uint8_t  usbd_video_IN_Incplt (void  *pdev)
 {
-  return USBD_OK;
+	return USBD_OK;
 }
 
 
@@ -473,49 +501,55 @@ static uint8_t  usbd_video_IN_Incplt (void  *pdev)
 static void VIDEO_Req_GetCurrent(void *pdev, USB_SETUP_REQ *req)
 {  
   /* Send the current mute state */
-  
+
   DCD_EP_Flush (pdev,USB_ENDPOINT_OUT(0));
-  
+
   if(req->wValue == 256)
   {
-    //Probe Request
-    USBD_CtlSendData (pdev, (uint8_t*)&videoProbeControl, req->wLength);
+	  //Probe Request
+	  USBD_CtlSendData (pdev, (uint8_t*)&videoProbeControl, req->wLength);
   }
   else if (req->wValue == 512)
   {
-    //Commit Request
-    USBD_CtlSendData (pdev, (uint8_t*)&videoCommitControl, req->wLength);
+	  //Commit Request
+
+	  USBD_CtlSendData (pdev, (uint8_t*)&videoCommitControl, req->wLength);
   }
+
+
+
 }
 
 //PC SEND DATA TO uC
 static void VIDEO_Req_SetCurrent(void *pdev, USB_SETUP_REQ *req)
 { 
-  
+
   if (req->wLength)
   {
     /* Prepare the reception of the buffer over EP0 */
-    
-    
-    if(req->wValue == 256)
-    {
-      //Probe Request
-      USBD_CtlPrepareRx (pdev, (uint8_t*)&videoProbeControl, req->wLength);
-    }
-    else if (req->wValue == 512)
-    {
-      //Commit Request
-      USBD_CtlPrepareRx (pdev, (uint8_t*)&videoCommitControl, req->wLength);
-    }
-    
+
+
+	  if(req->wValue == 256)
+	  {
+		  //Probe Request
+		  USBD_CtlPrepareRx (pdev, (uint8_t*)&videoProbeControl, req->wLength);
+	  }
+	  else if (req->wValue == 512)
+	  {
+		  //Commit Request
+		  USBD_CtlPrepareRx (pdev, (uint8_t*)&videoCommitControl, req->wLength);
+	  }
+
   }
 }
 
-
-static void VIDEO_Req_GetRes(void *pdev, USB_SETUP_REQ *req)
+/*
+void VIDEO_Req_GetRes(void *pdev, USB_SETUP_REQ *req)
 {
-  USBD_CtlSendData (pdev, (uint8_t*)&videoProbeControl, 0);
+
+	USBD_CtlSendData (pdev, &videoProbeControl, 0);
 }
+*/
 
 /**
   * @brief  USBD_video_GetCfgDesc 
