@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Project>
+  <Desktop>
+    <Static>
+      <Debug-Log>
+        
+        
+      <PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Find-in-Files</Factory></Window></Windows></PreferedWindows><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1307</ColumnWidth1></Debug-Log>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>980</ColumnWidth1><ColumnWidth2>261</ColumnWidth2><ColumnWidth3>65</ColumnWidth3><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window><Window><Factory>Find-in-Files</Factory></Window></Windows></PreferedWindows></Build>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>237</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Disassembly>
+        <col-names>
+          
+          
+        <item>Disassembly</item><item>_I0</item></col-names>
+        <col-widths>
+          
+          
+        <item>500</item><item>20</item></col-widths>
+        <DisasmHistory/>
+        
+        
+      <PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><ShowCodeCoverage>0</ShowCodeCoverage><ShowInstrProfiling>0</ShowInstrProfiling></Disassembly>
+    <Find-in-Files><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window></Windows></PreferedWindows><ColumnWidth0>470</ColumnWidth0><ColumnWidth1>67</ColumnWidth1><ColumnWidth2>806</ColumnWidth2></Find-in-Files><Breakpoints><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><col-names><item>Breakpoint</item><item>_I0</item></col-names><col-widths><item>500</item><item>35</item></col-widths></Breakpoints><WATCH_1><expressions><item>IsocOutRdPtr</item><item>IsocOutBuff</item><item>AudioRemSize</item><item>AudioState</item><item>sinebuf2</item><item>Addr</item><item>cnt1</item><item>IsocInWrPtr</item><item>IsocInBuff</item><item>PlayFlag</item><item>usbd_audio_AltSet</item><item>RecBuf1</item><item>gintr_status</item><item>pdev-&gt;regs.DREGS-&gt;DAINT</item><item>pdev-&gt;regs.DREGS-&gt;DAINTMSK</item><item/></expressions><col-names><item>Expression</item><item>Location</item><item>Type</item><item>Value</item></col-names><col-widths><item>173</item><item>150</item><item>100</item><item>372</item></col-widths><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></WATCH_1><Register><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></Register><QuickWatch><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>WATCH_1</Factory></Window></Windows></PreferedWindows><col-names><item>Expression</item><item>Location</item><item>Type</item><item>Value</item></col-names><col-widths><item>100</item><item>150</item><item>100</item><item>100</item></col-widths><QWatchHistory/></QuickWatch></Static>
+    <Windows>
+      
+      
+      
+    <Wnd1>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-7375-20064</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>STM32F4-Discovery_audio</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32F4_Discovery</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32_USB_Device_Library</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32_USB_Device_Library/Class</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32_USB_Device_Library/Class/Audio</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32_USB_Device_Library/Class/video</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32_USB_OTG_Driver</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/User</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd1><Wnd2><Tabs><Tab><Identity>TabID-10372-11303</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd2></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\main.c</Filename><XPos>0</XPos><YPos>3</YPos><SelStart>275</SelStart><SelEnd>275</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Libraries\STM32_USB_Device_Library\Class\video\inc\usbd_video_core.h</Filename><XPos>0</XPos><YPos>28</YPos><SelStart>2003</SelStart><SelEnd>2003</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\test_pic2.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>52</SelStart><SelEnd>52</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Libraries\STM32_USB_Device_Library\Class\video\src\usbd_video_core.c</Filename><XPos>0</XPos><YPos>372</YPos><SelStart>18261</SelStart><SelEnd>18261</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\usb_conf.h</Filename><XPos>0</XPos><YPos>129</YPos><SelStart>5264</SelStart><SelEnd>5264</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-00cc42b8><key>iaridepm.enu1</key></Toolbar-00cc42b8></Sizes></Row0><Row1><Sizes><Toolbar-1551a1a8><key>debuggergui.enu1</key></Toolbar-1551a1a8></Sizes></Row1><Row2><Sizes><Toolbar-150ec100><key>armstlink.enu1</key></Toolbar-150ec100></Sizes></Row2></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>395</Bottom><Right>328</Right><x>-2</x><y>-2</y><xscreen>307</xscreen><yscreen>335</yscreen><sizeHorzCX>224744</sizeHorzCX><sizeHorzCY>488338</sizeHorzCY><sizeVertCX>241581</sizeVertCX><sizeVertCY>578717</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1368</Right><x>-2</x><y>-2</y><xscreen>1370</xscreen><yscreen>200</yscreen><sizeHorzCX>1002928</sizeHorzCX><sizeHorzCY>291545</sizeHorzCY><sizeVertCX>146413</sizeVertCX><sizeVertCY>291545</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Project>
+
+

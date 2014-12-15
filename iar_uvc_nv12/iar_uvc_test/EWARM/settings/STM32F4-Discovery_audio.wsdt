@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>STM32F4-Discovery_audio/Demo</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>289</Column0><Column1>8</Column1><Column2>27</Column2><Column3>0</Column3></ColumnWidths>
+      </Workspace>
+    <Build><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>980</ColumnWidth1><ColumnWidth2>261</ColumnWidth2><ColumnWidth3>65</ColumnWidth3></Build><TerminalIO/><Find-in-Files><ColumnWidth0>470</ColumnWidth0><ColumnWidth1>67</ColumnWidth1><ColumnWidth2>806</ColumnWidth2></Find-in-Files><Breakpoints><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><col-names><item>Breakpoint</item><item>_I0</item></col-names><col-widths><item>500</item><item>35</item></col-widths></Breakpoints><Debug-Log><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1307</ColumnWidth1></Debug-Log></Static>
+    <Windows>
+      
+    <Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-2026-11899</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>STM32F4-Discovery_audio</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32F4_Discovery</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32_USB_Device_Library</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32_USB_Device_Library/Class</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32_USB_Device_Library/Class/Audio</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32_USB_Device_Library/Class/audio</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32_USB_Device_Library/Class/video</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/STM32_USB_OTG_Driver</ExpandedNode><ExpandedNode>STM32F4-Discovery_audio/User</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-21657-19183</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab><Tab><Identity>TabID-15823-22158</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab><Tab><Identity>TabID-4713-19157</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\main.c</Filename><XPos>0</XPos><YPos>3</YPos><SelStart>151</SelStart><SelEnd>151</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Libraries\STM32_USB_Device_Library\Class\video\inc\usbd_video_core.h</Filename><XPos>0</XPos><YPos>28</YPos><SelStart>2003</SelStart><SelEnd>2003</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Libraries\STM32_USB_Device_Library\Class\video\src\usbd_video_core.c</Filename><XPos>0</XPos><YPos>372</YPos><SelStart>18261</SelStart><SelEnd>18261</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\usb_conf.h</Filename><XPos>0</XPos><YPos>129</YPos><SelStart>5264</SelStart><SelEnd>5264</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-01c04c18><key>iaridepm.enu1</key></Toolbar-01c04c18></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>451</Bottom><Right>361</Right><x>-2</x><y>-2</y><xscreen>190</xscreen><yscreen>160</yscreen><sizeHorzCX>139092</sizeHorzCX><sizeHorzCY>233236</sizeHorzCY><sizeVertCX>265739</sizeVertCX><sizeVertCY>660350</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>190</Bottom><Right>1368</Right><x>-2</x><y>-2</y><xscreen>1370</xscreen><yscreen>192</yscreen><sizeHorzCX>1002928</sizeHorzCX><sizeHorzCY>279883</sizeHorzCY><sizeVertCX>139092</sizeVertCX><sizeVertCY>233236</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

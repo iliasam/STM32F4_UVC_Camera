@@ -1,0 +1,91 @@
+[DebugChecksum]
+Checksum=953850720
+[Exceptions]
+StopOnUncaught=_ 0
+StopOnThrow=_ 0
+[Stack]
+FillEnabled=0
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[CallStack]
+ShowArgs=0
+[Disassembly]
+MixedMode=1
+[SWOTraceHWSettings]
+OverrideDefaultClocks=0
+CpuClock=2000000
+ClockAutoDetect=0
+ClockWanted=2000000
+JtagSpeed=2000000
+Prescaler=1
+TimeStampPrescIndex=0
+TimeStampPrescData=0
+PcSampCYCTAP=1
+PcSampPOSTCNT=15
+PcSampIndex=0
+DataLogMode=0
+ITMportsEnable=0
+ITMportsTermIO=0
+ITMportsLogFile=0
+ITMlogFile=$PROJ_DIR$\ITM.log
+[watch_formats]
+Fmt0={W}0:Addr	4	0
+Fmt1={W}0:pdev->regs.DREGS->DAINT	1	0
+Fmt2={W}0:pdev->regs.DREGS->DAINTMSK	1	0
+[DataLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+[InterruptLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+SumSortOrder=0
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[Trace2]
+Enabled=0
+[SWOTraceWindow]
+PcSampling=0
+InterruptLogs=0
+ForcedTimeStamps=0
+EventCPI=0
+EventEXC=0
+EventFOLD=0
+EventLSU=0
+EventSLEEP=0
+[CallStackLog]
+Enabled=0
+[DriverProfiling]
+Enabled=0
+Mode=3
+Graph=0
+Symbiont=0
+Exclusions=
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Bp0=_ 0 "EMUL_DATA" "AudioRemSize" 0 0 0 0 4294967295
+Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\Libraries\STM32_USB_OTG_Driver\src\usb_dcd_int.c}.229.5" 0 0 1 "" 0 "" 0
+Bp2=_ 0 "EMUL_DATA" "pdev->regs.DREGS->DAINTMSK" 2 0 0 0 4294967295
+Count=3
+[Aliases]
+A0=_ "D:\MYPROGS\STM32F4\USB_AUDIO_IN\usb_audio\my_proj5\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_spi.c" ""
+A1=_ "D:\SHARE\USB_AUDIO\my_proj3\my_audio_usb_play_test\main.c" "D:\MYPROGS\STM32F4\USB_AUDIO_IN\usb_audio\my_proj3\my_audio_usb_play_test\main.c"
+Count=2
+SuppressDialog=1
