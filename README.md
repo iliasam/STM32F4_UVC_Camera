@@ -1,4 +1,5 @@
 Some projects with STM32F4-DISCOVERY.
+
 More information in Russian: http://geektimes.ru/post/255316/
 
 iar_uvc_mjpeg/iar_uvc_camera - Analoge Video (PAL) captured, encoded to JPEG and transmitted to PC by USB UVC.
