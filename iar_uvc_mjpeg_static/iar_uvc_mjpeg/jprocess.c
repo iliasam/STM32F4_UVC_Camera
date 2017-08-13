@@ -1,4 +1,4 @@
-/* Name: jprocess.c
+п»ї/* Name: jprocess.c
  * Project: ARM fast JPEG-coder
  * Author: Dmitry Oparin aka Rst7/CBSIE (Modified by ILIASAM)
  * Creation Date: 1-Jun-2008
@@ -7,40 +7,38 @@
  */
 
 #include "stdafx.h"
-#include "params.h"
 #include "jprocess.h"
 #include "gray_jpg_test3.h"
 #include <stdint.h>
-
-#define LINE_WIDTH IMG_WIDTH
 
 //coocox
 //uint8_t outbytes0[20000] __attribute__ ((section(".ccm")));
 //uint8_t outbytes1[20000] __attribute__ ((section(".ccm")));
 
+//Buffer for encoded JPEG image
 #pragma location = ".ccmram"
 uint8_t outbytes0[32000];
 #pragma location = ".ccmram"
 uint8_t outbytes1[32000];
 
-uint8_t *write_pointer = (uint8_t*)&outbytes0;//сюда записываются закодированные jpeg данные (кодером)
-uint8_t *read_pointer =  (uint8_t*)&outbytes1;//отсода данные считываются при передаче
+uint8_t *write_pointer = (uint8_t*)outbytes0;//СЃСЋРґР° Р·Р°РїРёСЃС‹РІР°СЋС‚СЃВ¤ Р·Р°РєРѕРґРёСЂРѕРІР°РЅРЅС‹Рµ jpeg РґР°РЅРЅС‹Рµ (РєРѕРґРµСЂРѕРј)
+uint8_t *read_pointer =  (uint8_t*)outbytes1;//РѕС‚СЃРѕРґР° РґР°РЅРЅС‹Рµ СЃС‡РёС‚С‹РІР°СЋС‚СЃВ¤ РїСЂРё РїРµСЂРµРґР°С‡Рµ
 
-extern uint8_t raw_image[240][320];
+extern uint8_t raw_image[IMG_HEIGHT][IMG_WIDTH];
 
-//Использовать *outbytes_p для вывода в outbytes
+//В»СЃРїРѕР»СЊР·РѕРІР°С‚СЊ *outbytes_p РґР»В¤ РІС‹РІРѕРґР° РІ outbytes
 #define USE_OUTBYTES
 
 
 #ifdef USE_OUTBYTES
 //uint8_t outbytes[32768];
 #else
-//Сразу в железо, для AVR тут стоит #define OUTSYM(VAR) {while(!UCSRA_UDRE);UDR=VAR;}
+//вЂ”СЂР°Р·Сѓ РІ Р¶РµР»РµР·Рѕ, РґР»В¤ AVR С‚СѓС‚ СЃС‚РѕРёС‚ #define OUTSYM(VAR) {while(!UCSRA_UDRE);UDR=VAR;}
 volatile UINT8 _SYMBOL;
 #define OUTSYM(VAR) _SYMBOL=(VAR)
 #endif
 
-//Использовать вместо деления на коэффициент q[i] - умножение на 1/q[i].
+//В»СЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІРјРµСЃС‚Рѕ РґРµР»РµРЅРёВ¤ РЅР° РєРѕСЌС„С„РёС†РёРµРЅС‚ q[i] - СѓРјРЅРѕР¶РµРЅРёРµ РЅР° 1/q[i].
 #define USE_MUL
 
 #define abs(VAL) ((VAL)>=0?(VAL):-(VAL))
@@ -465,8 +463,8 @@ static __z void dct_pass1(DCTELEM * dataptr, const UINT8 *inp)
     dataptr[7] = z11 - z4;
 
     dataptr += DCTSIZE;		/* advance pointer to next row */
-    //inp-=IMG_WIDTH; //минус - потому как bmp вверх ногами
-    inp+=LINE_WIDTH; //для нормальных изображений
+    //inp-=IMG_WIDTH; //РјРёРЅСѓСЃ - РїРѕС‚РѕРјСѓ РєР°Рє bmp РІРІРµСЂС… РЅРѕРіР°РјРё
+    inp+=IMG_WIDTH; //РґР»В¤ РЅРѕСЂРјР°Р»СЊРЅС‹С… РёР·РѕР±СЂР°Р¶РµРЅРёР№
   }
   while(--ctr);
 }
@@ -706,11 +704,11 @@ void process_quadro_block(UINT8 *start_pointer)//pointer - upper left pixel
 	dct_pass2(dct_data);
     outbytes_p=z_and_q(bitstream_byte,bitstream_bit,outbytes_p,(unsigned int *)z_q,0);
 
-    dct_pass1(dct_data, (UINT8*)(start_pointer + DCTSIZE*LINE_WIDTH));//lower left
+    dct_pass1(dct_data, (UINT8*)(start_pointer + DCTSIZE*IMG_WIDTH));//lower left
 	dct_pass2(dct_data);
     outbytes_p=z_and_q(bitstream_byte,bitstream_bit,outbytes_p,(unsigned int *)z_q,0);
 
-    dct_pass1(dct_data, (UINT8*)(start_pointer + DCTSIZE*LINE_WIDTH + DCTSIZE));//lower right
+    dct_pass1(dct_data, (UINT8*)(start_pointer + DCTSIZE*IMG_WIDTH + DCTSIZE));//lower right
 	dct_pass2(dct_data);
     outbytes_p=z_and_q(bitstream_byte,bitstream_bit,outbytes_p,(unsigned int *)z_q,0);
 
@@ -736,8 +734,11 @@ unsigned int jprocess(void)
     UREG xcount=0;
     do
     { 
-      process_quadro_block((UINT8*)(inBMP2+0x436 + xcount*DCTSIZE + ycount*IMG_WIDTH));//pointer - upper left pixel
-      //process_quadro_block((UINT8*)((uint8_t*)&raw_image + xcount*DCTSIZE + ycount*IMG_WIDTH));//pointer - upper left pixel
+      //pointer - upper left pixel
+      //process_quadro_block process 4 blocks (2 horizontal and 2 vertical)
+      process_quadro_block((UINT8*)(inBMP2+0x436 + xcount*DCTSIZE + ycount*IMG_WIDTH));//Data source for encoder - BMP image in FLASH
+      //process_quadro_block((UINT8*)((uint8_t*)&raw_image + xcount*DCTSIZE + ycount*IMG_WIDTH));//Data source for encoder - RAM array "raw_image"
+      
       //Next blocks by X
       xcount = xcount+2;
     }
@@ -746,10 +747,10 @@ unsigned int jprocess(void)
   }
   while((ycount+=(DCTSIZE*2))<(IMG_HEIGHT));
 
-  return out_jtail(write_pointer);//start poiter нужен для вычисления размера изображения
+  return out_jtail(write_pointer);//start poiter РЅСѓР¶РµРЅ РґР»В¤ РІС‹С‡РёСЃР»РµРЅРёВ¤ СЂР°Р·РјРµСЂР° РёР·РѕР±СЂР°Р¶РµРЅРёВ¤
 }
 
-
+//Called from "usbd_video_core"
 void switch_buffers(void)
 {
   if (write_pointer == ((uint8_t*)&outbytes0))

@@ -1,10 +1,10 @@
-#include "usbd_video_core.h"
+п»ї#include "usbd_video_core.h"
 #include "uvc.h"
 #include "jprocess.h"
 
 extern uint8_t *read_pointer;
 extern uint16_t last_jpeg_frame_size;
-extern volatile uint8_t jpeg_encode_done;//1 - encode stopped //кодирование закончилось
+extern volatile uint8_t jpeg_encode_done;//1 - encode stopped //РєРѕРґРёСЂРѕРІР°РЅРёРµ Р·Р°РєРѕРЅС‡РёР»РѕСЃСЊ
 extern volatile uint8_t new_frame_cap_enabled;
 
 /*********************************************
@@ -91,8 +91,8 @@ USBD_Class_cb_TypeDef  VIDEO_cb =
   usbd_video_DataIn,
   usbd_video_DataOut,
   usbd_video_SOF,
-  NULL,
-  NULL ,
+  usbd_video_IN_Incplt,
+  usbd_video_OUT_Incplt ,
   USBD_video_GetCfgDesc,
 #ifdef USB_OTG_HS_CORE  
   USBD_video_GetCfgDesc, /* use same config as per FS */
@@ -395,30 +395,30 @@ static uint8_t  usbd_video_DataIn (void *pdev, uint8_t epnum)
   static uint16_t packets_in_frame = 1;
   static uint16_t last_packet_size = 0;
   
-  uint8_t packet[VIDEO_PACKET_SIZE];
+  static uint8_t packet[VIDEO_PACKET_SIZE];
 
-  static uint8_t tx_enable_flag = 0;//разрешение передачи
+  static uint8_t tx_enable_flag = 0;//СЂР°Р·СЂРµС€РµРЅРёРµ РїРµСЂРµРґР°С‡Рё
 
   DCD_EP_Flush(pdev,USB_ENDPOINT_IN(1));//very important
 
   if (tx_enable_flag) packets_cnt++;
   
-  if (tx_enable_flag == 0)//если передача закончилась//if previous transmission ended
+  if (tx_enable_flag == 0)//РµСЃР»Рё РїРµСЂРµРґР°С‡Р° Р·Р°РєРѕРЅС‡РёР»Р°СЃСЊ//if previous transmission ended
   {
-    if (jpeg_encode_done)//если кодирование закончилось//if frame endoding ended
+    if (jpeg_encode_done)//РµСЃР»Рё РєРѕРґРёСЂРѕРІР°РЅРёРµ Р·Р°РєРѕРЅС‡РёР»РѕСЃСЊ//if frame endoding ended
     {
       tx_enable_flag = 1;
-      switch_buffers();//переключить буферы для двойной буферизации//switch double buffering buffers
-      new_frame_cap_enabled = 1;//начать новый захват кадра//start new frame capture
+      switch_buffers();//РїРµСЂРµРєР»СЋС‡РёС‚СЊ Р±СѓС„РµСЂС‹ РґР»СЏ РґРІРѕР№РЅРѕР№ Р±СѓС„РµСЂРёР·Р°С†РёРё//switch double buffering buffers
+      new_frame_cap_enabled = 1;//РЅР°С‡Р°С‚СЊ РЅРѕРІС‹Р№ Р·Р°С…РІР°С‚ РєР°РґСЂР°//start new frame capture
       
       //start of new UVC frame
-      //начало нового кадра UVC
+      //РЅР°С‡Р°Р»Рѕ РЅРѕРІРѕРіРѕ РєР°РґСЂР° UVC
       packets_cnt = 0;
       header[1]^= 1;//toggle bit0 every new frame
       picture_pos = 0;
       
-      packets_in_frame = (last_jpeg_frame_size/ ((uint16_t)VIDEO_PACKET_SIZE -2))+1;//-2 - без учета заголовка
-      last_packet_size = (last_jpeg_frame_size - ((packets_in_frame-1) * ((uint16_t)VIDEO_PACKET_SIZE-2)) + 2);//+2 - учитывая заголовок
+      packets_in_frame = (last_jpeg_frame_size/ ((uint16_t)VIDEO_PACKET_SIZE -2))+1;//-2 - Р±РµР· СѓС‡РµС‚Р° Р·Р°РіРѕР»РѕРІРєР°
+      last_packet_size = (last_jpeg_frame_size - ((packets_in_frame-1) * ((uint16_t)VIDEO_PACKET_SIZE-2)) + 2);//+2 - СѓС‡РёС‚С‹РІР°СЏ Р·Р°РіРѕР»РѕРІРѕРє
     }
   }
 
@@ -438,10 +438,10 @@ static uint8_t  usbd_video_DataIn (void *pdev, uint8_t epnum)
     {
       DCD_EP_Tx (pdev,USB_ENDPOINT_IN(1), (uint8_t*)&packet, (uint32_t)VIDEO_PACKET_SIZE);
     }
-    else if (tx_enable_flag == 1)//только если передача разрешена//only if transmisson enabled
+    else if (tx_enable_flag == 1)//С‚РѕР»СЊРєРѕ РµСЃР»Рё РїРµСЂРµРґР°С‡Р° СЂР°Р·СЂРµС€РµРЅР°//only if transmisson enabled
     {
       //last packet in UVC frame
-      //последний пакет в кадре UVC
+      //РїРѕСЃР»РµРґРЅРёР№ РїР°РєРµС‚ РІ РєР°РґСЂРµ UVC
       DCD_EP_Tx (pdev,USB_ENDPOINT_IN(1), (uint8_t*)&packet, (uint32_t)last_packet_size);
       tx_enable_flag = 0;//stop TX data
     }

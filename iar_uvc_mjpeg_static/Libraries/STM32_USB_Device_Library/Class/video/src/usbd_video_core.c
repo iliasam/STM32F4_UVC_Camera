@@ -90,8 +90,8 @@ USBD_Class_cb_TypeDef  VIDEO_cb =
   usbd_video_DataIn,
   usbd_video_DataOut,
   usbd_video_SOF,
-  NULL,
-  NULL ,
+  usbd_video_IN_Incplt,
+  usbd_video_OUT_Incplt ,
   USBD_video_GetCfgDesc,
 #ifdef USB_OTG_HS_CORE  
   USBD_video_GetCfgDesc, /* use same config as per FS */
@@ -385,8 +385,7 @@ static uint8_t  usbd_video_DataIn (void *pdev, uint8_t epnum)
 {
   static uint16_t packets_cnt = 0xffff;
   static uint8_t header[2] = {2,0};//length + data
-  // uint8_t* data_pointer;
-  uint8_t packet[VIDEO_PACKET_SIZE];
+  static uint8_t packet[VIDEO_PACKET_SIZE];
   uint16_t i;
   static uint32_t picture_pos;
   
@@ -396,8 +395,6 @@ static uint8_t  usbd_video_DataIn (void *pdev, uint8_t epnum)
   static uint8_t tx_enable_flag = 0;//разрешение передачи
   
   DCD_EP_Flush(pdev,USB_ENDPOINT_IN(1));//very important
-  
-  
   
   if (tx_enable_flag) packets_cnt++;
   

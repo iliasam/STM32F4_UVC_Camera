@@ -1,4 +1,6 @@
-//Stactic bmp picture encoded to JPEG and transmitted to PC by USB UVC.
+п»ї//Stactic bmp picture encoded to JPEG and transmitted to PC by USB UVC.
+//BMP image is inverted because of BMP image structure
+//Data source (image) for jpeg encoder can be switched (FLASH/RAM) in "jprocess" function.
 //by ILIASAM
 
 /* Includes ------------------------------------------------------------------*/
@@ -13,11 +15,11 @@ __ALIGN_BEGIN USB_OTG_CORE_HANDLE  USB_OTG_dev __ALIGN_END;
 
 __IO uint8_t UserButtonPressed = 0;
 
-uint8_t raw_image[240][320];
+uint8_t raw_image[IMG_HEIGHT][IMG_WIDTH];
 
 uint16_t last_jpeg_frame_size = 0;
-volatile uint8_t jpeg_encode_done = 0;//1 - encode stopped //кодирование закончилось
-volatile uint8_t jpeg_encode_enabled = 1;//1 - capture and encoding enabled //кодирование разрешено
+volatile uint8_t jpeg_encode_done = 0;//1 - encode stopped flag //РєРѕРґРёСЂРѕРІР°РЅРёРµ Р·Р°РєРѕРЅС‡РёР»РѕСЃСЊ
+volatile uint8_t jpeg_encode_enabled = 1;//1 - capture and encoding enabled //РєРѕРґРёСЂРѕРІР°РЅРёРµ СЂР°Р·СЂРµС€РµРЅРѕ
 
 double circle_x = 0;
 double circle_y = 0;
@@ -49,66 +51,59 @@ int main(void)
   
   while(1)
   {
-    if (jpeg_encode_enabled == 1)//можно начинать кодирование
+    if (jpeg_encode_enabled == 1)//РјРѕР¶РЅРѕ РЅР°С‡РёРЅР°С‚СЊ РєРѕРґРёСЂРѕРІР°РЅРёРµ
     {
       jpeg_encode_enabled = 0;
       jpeg_encode_done = 0;
-      last_jpeg_frame_size = jprocess();
+      last_jpeg_frame_size = jprocess();//Data source (image) for jpeg encoder can be switched in "jprocess" function.
       
       circle_x = 160 + sin(angle)*60;
       circle_y = 120 + cos(angle)*60;
       angle+= 0.05;
-      color+=10;
+      color+= 10;
+      draw_circle((int)circle_x, (int)circle_y, 15, color);
       
-      draw_circle((int)circle_x, (int)circle_y, 15,color);
-      jpeg_encode_done = 1;//encoding ended //кодирование закончено
+      jpeg_encode_done = 1;//encoding ended //РєРѕРґРёСЂРѕРІР°РЅРёРµ Р·Р°РєРѕРЅС‡РµРЅРѕ
       STM_EVAL_LEDToggle(LED3);
     }
-    
-    
   }
-  
-  while(1){
-    asm("nop");
-  }
-  
 }
 
 
-//внимание - нет проверок на выход за края вдеопамяти
+//РІРЅРёРјР°РЅРёРµ - РЅРµС‚ РїСЂРѕРІРµСЂРѕРє РЅР° РІС‹С…РѕРґ Р·Р° РєСЂР°СЏ РІРґРµРѕРїР°РјСЏС‚Рё
 void draw_circle(int Hcenter, int Vcenter, int radius,uint8_t color)
 {
-    int x = radius;
-    int y = 0;
-    int xChange = 1 - (radius << 1);
-    int yChange = 0;
-    int radiusError = 0;
-    int i;
-    int p = 3 - 2 * radius;
-
-    while (x >= y)
+  int x = radius;
+  int y = 0;
+  int xChange = 1 - (radius << 1);
+  int yChange = 0;
+  int radiusError = 0;
+  int i;
+  //int p = 3 - 2 * radius;
+  
+  while (x >= y)
+  {
+    for (i = Hcenter - x; i <= Hcenter + x; i++)
     {
-        for (i = Hcenter - x; i <= Hcenter + x; i++)
-        {
-        	raw_image[Vcenter + y][i] = color;
-        	raw_image[Vcenter - y][i] = color;
-        }
-        for (i = Hcenter - y; i <= Hcenter + y; i++)
-        {
-        	raw_image[Vcenter + x][i] = color;
-        	raw_image[Vcenter - x][i] = color;
-        }
-
-        y++;
-        radiusError += yChange;
-        yChange += 2;
-        if (((radiusError << 1) + xChange) > 0)
-        {
-            x--;
-            radiusError += xChange;
-            xChange += 2;
-        }
+      raw_image[Vcenter + y][i] = color;
+      raw_image[Vcenter - y][i] = color;
     }
+    for (i = Hcenter - y; i <= Hcenter + y; i++)
+    {
+      raw_image[Vcenter + x][i] = color;
+      raw_image[Vcenter - x][i] = color;
+    }
+    
+    y++;
+    radiusError += yChange;
+    yChange += 2;
+    if (((radiusError << 1) + xChange) > 0)
+    {
+      x--;
+      radiusError += xChange;
+      xChange += 2;
+    }
+  }
 }
 
 
