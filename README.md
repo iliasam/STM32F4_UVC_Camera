@@ -13,3 +13,5 @@ It is possible to swithch between FLASH (bmp image) and RAM (moving circle) as a
 * iar_uvc_nv12/iar_uvc_test - Передача статической картинки на компьютер с использованием USB UVC.  
 * iar_uvc_mjpeg_static/iar_uvc_mjpeg - Статическое bmp изображение кодируется в JPEG и передается на компьютер с использованием USB UVC.  
 * iar_adc_test - Захват аналогового черно-белого сигнала в память STM32F4.
+
+If you heed HOST code variant (to capture data from USB camera), see my another repo: https://github.com/iliasam/STM32_HOST_UVC_Camera
