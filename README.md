@@ -1,6 +1,6 @@
 Some USB Device UVC projects for STM32F4-DISCOVERY:  
 
-More information in Russian: http://geektimes.ru/post/255316/ 
+More information in Russian: https://habr.com/ru/post/245511/
 
 * iar_uvc_mjpeg/iar_uvc_camera - Analoge Video (PAL) captured, encoded to JPEG and transmitted to PC by USB UVC.  
 * iar_uvc_nv12/iar_uvc_test - Send static NV12 image to PC by UVC.  
